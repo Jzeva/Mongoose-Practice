@@ -1,0 +1,27 @@
+{
+  "name": "Mongoose-Practice",
+  "version": "1.0.0",
+  "description": "Mongoose Practice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jzeva/Mongoose-Practice.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jzeva/Mongoose-Practice/issues"
+  },
+  "homepage": "https://github.com/Jzeva/Mongoose-Practice#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
