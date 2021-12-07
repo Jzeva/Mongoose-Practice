@@ -3,12 +3,17 @@ const Course = require('../models/course');
 async function getAllCourse(req,res){
     //db.courses.find()
     //query(chain)
-   const courses =  Course.find().exec();//it will return a promise.
+   const courses =  await Course.find().exec();//it will return a promise.
    return res.json(courses);
 }
 
-function getCourseById(req,res){
-
+async function getCourseById(req,res){
+    const{id} = req.params;
+    const course = await Course.findById(id).exec();//Mongoose can translate this id to String.
+    if(!course){
+        return res.status(404).json({error:'course not found'});
+    }
+    return res.json(course);
 }
 
 async function addCourse(req,res){
@@ -31,12 +36,48 @@ async function addCourse(req,res){
     return res.status(201).json(course);
 }
 
-function updateCourseById(req,res){
-    
+async function updateCourseById(req,res){
+    const { id } = req.params;
+    const { name, description} = req.body;
+    //db.collections.updateOne({_id:id},{$set})
+
+    /*     There is two ways to change the data,the first one is:
+    const course = await Course.findById(id);
+    course.name = name;
+    course.description = description;
+    await course.save();
+    And the other way is: */
+
+    /* 
+    两者不同：
+    1.上面的写法是先把document取出来并且转换为mongoose的document的对象，
+    然后进行修改，这种写法会触发mongoose的validation；
+    而下面的写法需要自己对数据的有效性进行验证
+    2.上面的是两条请求，先取数据，然后存数据，
+    下面的只有一条请求，找到数据，然后修改返回数据。
+
+    注：用哪种方法主要取决于是要自己做validation还是要mongoose做validation。
+    */
+
+
+    //The{new : true} param can help return the new data after changing, 
+    //otherwise it will be the old data
+    const course = await Course.findByIdAndUpdate(id,{name,description},{new:true})
+    .exec();
+    if(!course){
+        return res.status(404).json({error:'course not found'});
+    }
+
+    return res.json(course);
 }
 
-function deleteCourseById(req,res){
-
+async function deleteCourseById(req,res){
+    const{id} = req.params;
+    const course = await Course.findByIdAndDelete(id).exec();
+    if(!course){
+        return res.status(404).json({error:'course not found'});
+    }
+    return res.status(204).json(course);
 }
 
 module.exports = {
