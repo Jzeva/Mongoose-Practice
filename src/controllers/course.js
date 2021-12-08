@@ -1,4 +1,5 @@
 const Course = require('../models/course');
+const Joi = require('joi');
 
 async function getAllCourse(req,res){
     //db.courses.find()
@@ -17,7 +18,18 @@ async function getCourseById(req,res){
 }
 
 async function addCourse(req,res){
-    const {code, name, description} = req.body;
+    // const {code, name, description} = req.body;
+
+    const schema = Joi.object({
+        name:Joi.string().required(),
+        code:Joi.string().regex(/^[a-zA-Z]+[0-9]$/).required(),
+        description:Joi.string(),
+    });
+
+    const {code,name,description} = await schema.validateAsync(req.body,{
+        allowUnknown:true, //是否接受未在model里设定好的参数
+        stripUnknown:true, //属否要去掉未在model里设定好的参数
+    })
     //validate data
     /* 一般情况下不建议这样存取数据 原因：
     1.这样存数据 依赖于Mongoose自身的validation，
